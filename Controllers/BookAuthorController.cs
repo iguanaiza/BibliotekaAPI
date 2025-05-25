@@ -8,11 +8,11 @@ namespace BibliotekaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GenreEntriesController : ControllerBase
+    public class BookAuthorController : ControllerBase
     {
         #region DbContext
         private readonly ApplicationDbContext _context;
-        public GenreEntriesController(ApplicationDbContext context)
+        public BookAuthorController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -20,51 +20,51 @@ namespace BibliotekaAPI.Controllers
 
         #region GET
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenreEntry>>> GetGenreEntries()
+        public async Task<ActionResult<IEnumerable<BookAuthor>>> GetBookAuthors()
         {
-            return await _context.GenreEntries.ToListAsync();
+            return await _context.BookAuthors.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<GenreEntry>> GetGenreEntry(int id)
+        public async Task<ActionResult<BookAuthor>> GetBookAuthor(int id)
         {
             //Database
-            var GenreEntry = await _context.GenreEntries.FindAsync(id);
+            var BookAuthor = await _context.BookAuthors.FindAsync(id);
 
-            if (GenreEntry == null)
+            if (BookAuthor == null)
             {
                 return NotFound();
             }
-            return GenreEntry;
+            return BookAuthor;
         }
         #endregion
 
         #region POST
         [HttpPost]
-        public async Task<ActionResult<GenreEntry>> PostGenreEntry(GenreEntry GenreEntry)
+        public async Task<ActionResult<BookAuthor>> PostBookAuthor(BookAuthor BookAuthor)
         {
-            GenreEntry.Id = 0;
+            BookAuthor.Id = 0;
 
-            _context.GenreEntries.Add(GenreEntry);
+            _context.BookAuthors.Add(BookAuthor);
 
             await _context.SaveChangesAsync();
 
-            var resourceUrl = Url.Action(nameof(GetGenreEntry), new { id = GenreEntry.Id });
+            var resourceUrl = Url.Action(nameof(GetBookAuthor), new { id = BookAuthor.Id });
 
-            return Created(resourceUrl, GenreEntry);
+            return Created(resourceUrl, BookAuthor);
         }
         #endregion
 
         #region PUT
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenreEntry(int id, [FromBody] GenreEntry GenreEntry)
+        public async Task<IActionResult> PutBookAuthor(int id, [FromBody] BookAuthor BookAuthor)
         {
-            if (id != GenreEntry.Id)
+            if (id != BookAuthor.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(GenreEntry).State = EntityState.Modified;
+            _context.Entry(BookAuthor).State = EntityState.Modified;
 
             try
             {
@@ -72,7 +72,7 @@ namespace BibliotekaAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GenreEntryExists(id))
+                if (!BookAuthorExists(id))
                 {
                     return NotFound();
                 }
@@ -85,24 +85,24 @@ namespace BibliotekaAPI.Controllers
             return NoContent();
         }
 
-        private bool GenreEntryExists(int id)
+        private bool BookAuthorExists(int id)
         {
-            return _context.GenreEntries.Any(d => d.Id == id);
+            return _context.BookAuthors.Any(d => d.Id == id);
         }
         #endregion
 
         #region DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGenreEntry(int id)
+        public async Task<IActionResult> DeleteBookAuthor(int id)
         {
-            var GenreEntry = await _context.GenreEntries.FindAsync(id);
+            var BookAuthor = await _context.BookAuthors.FindAsync(id);
 
-            if (GenreEntry == null)
+            if (BookAuthor == null)
             {
                 return NotFound();
             }
 
-            _context.GenreEntries.Remove(GenreEntry);
+            _context.BookAuthors.Remove(BookAuthor);
             await _context.SaveChangesAsync();
 
             return NoContent();

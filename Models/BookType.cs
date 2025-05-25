@@ -3,13 +3,10 @@
 namespace BibliotekaAPI.Models
 {
     //typ czyli powieść, nowela itp. - to nie gatunek ksiazki ani nie kategoria!!!
-    public class BookTypeEntry
+    public class BookType
     {
         public int Id { get; set; }
-
-        [Required]
-        public string Title { get; set; } = null!;
-
-        public List<BookEntry> Books { get; set; } = new();
+        public string Title { get; set; }
+        public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

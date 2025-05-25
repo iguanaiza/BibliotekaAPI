@@ -8,11 +8,11 @@ namespace BibliotekaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BookTypeEntriesController : ControllerBase
+    public class BookCopyController : ControllerBase
     {
         #region DbContext
         private readonly ApplicationDbContext _context;
-        public BookTypeEntriesController(ApplicationDbContext context)
+        public BookCopyController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -20,51 +20,51 @@ namespace BibliotekaAPI.Controllers
 
         #region GET
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookTypeEntry>>> GetBookTypeEntries()
+        public async Task<ActionResult<IEnumerable<BookCopy>>> GetBookCopies()
         {
-            return await _context.BookTypeEntries.ToListAsync();
+            return await _context.BookCopies.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookTypeEntry>> GetBookTypeEntry(int id)
+        public async Task<ActionResult<BookCopy>> GetBookCopy(int id)
         {
             //Database
-            var BookTypeEntry = await _context.BookTypeEntries.FindAsync(id);
+            var BookCopy = await _context.BookCopies.FindAsync(id);
 
-            if (BookTypeEntry == null)
+            if (BookCopy == null)
             {
                 return NotFound();
             }
-            return BookTypeEntry;
+            return BookCopy;
         }
         #endregion
 
         #region POST
         [HttpPost]
-        public async Task<ActionResult<BookTypeEntry>> PostBookTypeEntry(BookTypeEntry BookTypeEntry)
+        public async Task<ActionResult<BookCopy>> PostBookCopy(BookCopy BookCopy)
         {
-            BookTypeEntry.Id = 0;
+            BookCopy.Id = 0;
 
-            _context.BookTypeEntries.Add(BookTypeEntry);
+            _context.BookCopies.Add(BookCopy);
 
             await _context.SaveChangesAsync();
 
-            var resourceUrl = Url.Action(nameof(GetBookTypeEntry), new { id = BookTypeEntry.Id });
+            var resourceUrl = Url.Action(nameof(GetBookCopy), new { id = BookCopy.Id });
 
-            return Created(resourceUrl, BookTypeEntry);
+            return Created(resourceUrl, BookCopy);
         }
         #endregion
 
         #region PUT
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBookTypeEntry(int id, [FromBody] BookTypeEntry BookTypeEntry)
+        public async Task<IActionResult> PutBookCopy(int id, [FromBody] BookCopy BookCopy)
         {
-            if (id != BookTypeEntry.Id)
+            if (id != BookCopy.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(BookTypeEntry).State = EntityState.Modified;
+            _context.Entry(BookCopy).State = EntityState.Modified;
 
             try
             {
@@ -72,7 +72,7 @@ namespace BibliotekaAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BookTypeEntryExists(id))
+                if (!BookCopyExists(id))
                 {
                     return NotFound();
                 }
@@ -85,24 +85,24 @@ namespace BibliotekaAPI.Controllers
             return NoContent();
         }
 
-        private bool BookTypeEntryExists(int id)
+        private bool BookCopyExists(int id)
         {
-            return _context.BookTypeEntries.Any(d => d.Id == id);
+            return _context.BookCopies.Any(d => d.Id == id);
         }
         #endregion
 
         #region DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBookTypeEntry(int id)
+        public async Task<IActionResult> DeleteBookCopy(int id)
         {
-            var BookTypeEntry = await _context.BookTypeEntries.FindAsync(id);
+            var BookCopy = await _context.BookCopies.FindAsync(id);
 
-            if (BookTypeEntry == null)
+            if (BookCopy == null)
             {
                 return NotFound();
             }
 
-            _context.BookTypeEntries.Remove(BookTypeEntry);
+            _context.BookCopies.Remove(BookCopy);
             await _context.SaveChangesAsync();
 
             return NoContent();
