@@ -9,20 +9,18 @@ namespace BibliotekaAPI.Models
         public int Id { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
 
-        [Required]
         public string Title { get; set; }
 
-        [Required]
         public string Year { get; set; }
 
-        [Required]
         public string Description { get; set; } //krótki opis ksiazki
 
-        [Required]
         public string Isbn { get; set; } //numer ISBN
 
-        [Required]
         public string PageCount { get; set; } //ilość stron
+
+        public bool IsDeleted { get; set; } = false;//do soft delete
+        public bool IsVisible { get; set; } = true;//do widoku w katalogu
 
         #region Odwołania do innych
         public int BookAuthorId { get; set; }
@@ -45,8 +43,8 @@ namespace BibliotekaAPI.Models
         [ForeignKey(nameof(BookCategoryId))]
         public BookCategory BookCategory { get; set; } //jedno z trzech: lektura, podręcznik, pozostałe
 
-        public ICollection<BookGenre> BookGenres { get; set; } = new List<BookGenre>();//gatunek ksiazki np. fantasy - moze byc wiele
-        public ICollection<BookCopy> BookCopies { get; set; } = new List<BookCopy>();//lista kopii
+        public ICollection<BookBookGenre> BookBookGenres { get; set; }//gatunek ksiazki np. fantasy - moze byc wiele
+        public ICollection<BookCopy> BookCopies { get; set; }//lista kopii
         #endregion
     }
 }

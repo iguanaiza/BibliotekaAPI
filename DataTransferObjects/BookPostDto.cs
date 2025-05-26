@@ -19,6 +19,7 @@ namespace BibliotekaAPI.DataTransferObjects
 
         [Required]
         public string PageCount { get; set; }
+        public bool IsVisible { get; set; }
 
         [Required]
         public int BookAuthorId { get; set; }
@@ -34,6 +35,6 @@ namespace BibliotekaAPI.DataTransferObjects
 
         [Required]
         public int BookCategoryId { get; set; }
-        public List<int> BookGenreIds { get; set; } = new();
+        public List<int> BookGenreIds { get; set; }
     }
 }

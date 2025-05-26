@@ -5,6 +5,7 @@ namespace BibliotekaAPI.DataTransferObjects
 {
     public class BookGetDto
     {
+        public int Id { get; set; }
         public string Title { get; set; }
 
         public string Year { get; set; }
@@ -13,6 +14,7 @@ namespace BibliotekaAPI.DataTransferObjects
 
         public string Isbn { get; set; }
         public string PageCount { get; set; }
+        public bool IsVisible { get; set; }
 
         public string BookAuthor { get; set; }
 
@@ -24,6 +26,6 @@ namespace BibliotekaAPI.DataTransferObjects
 
         public string BookType { get; set; }
 
-        public ICollection<BookGenre> BookGenres { get; set; }
+        public List<string> BookGenres { get; set; }
     }
 }

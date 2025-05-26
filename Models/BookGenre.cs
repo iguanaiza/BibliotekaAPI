@@ -9,6 +9,6 @@ namespace BibliotekaAPI.Models
 
         public string Title { get; set; }
 
-        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public ICollection<BookBookGenre> BookBookGenres { get; set; }
     }
 }

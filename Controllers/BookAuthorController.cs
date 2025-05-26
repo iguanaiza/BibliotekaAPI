@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BibliotekaAPI.Data;
 using BibliotekaAPI.Models;
+using BibliotekaAPI.DataTransferObjects;
 
 namespace BibliotekaAPI.Controllers
 {
@@ -20,74 +21,95 @@ namespace BibliotekaAPI.Controllers
 
         #region GET
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookAuthor>>> GetBookAuthors()
+        public async Task<IActionResult> GetBookAuthor()
         {
-            return await _context.BookAuthors.ToListAsync();
+            var author = await _context.BookAuthors
+                 .Include(a => a.Books)
+                 .Select(a => new BookAuthorGetDto
+                 {
+                     Id = a.Id,
+                     Name = a.Name,
+                     Surname = a.Surname,
+                     Books = a.Books
+                        .Select(aa => aa.Title)
+                        .ToList()
+                 })
+                 .ToListAsync();
+
+            return Ok(author);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookAuthor>> GetBookAuthor(int id)
+        public async Task<IActionResult> GetAuthorById(int id)
         {
-            //Database
-            var BookAuthor = await _context.BookAuthors.FindAsync(id);
+            var author = await _context.BookAuthors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (BookAuthor == null)
+            if (author == null) return NotFound();
+
+            var authorDto = new BookAuthorGetDto
             {
-                return NotFound();
-            }
-            return BookAuthor;
+                Id = author.Id,
+                Name = author.Name,
+                Surname = author.Surname,
+                Books = author.Books
+                   .Select(a => a.Title)
+                   .ToList()
+            };
+
+            return Ok(authorDto);
         }
         #endregion
 
         #region POST
         [HttpPost]
-        public async Task<ActionResult<BookAuthor>> PostBookAuthor(BookAuthor BookAuthor)
+        public async Task<IActionResult> CreateAuthor(BookAuthorPostDto BookAuthorPostDto)
         {
-            BookAuthor.Id = 0;
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.BookAuthors.Add(BookAuthor);
+            var author = new BookAuthor
+            {
+                Name = BookAuthorPostDto.Name,
+                Surname = BookAuthorPostDto.Surname
+            };
 
+            _context.BookAuthors.Add(author);
             await _context.SaveChangesAsync();
 
-            var resourceUrl = Url.Action(nameof(GetBookAuthor), new { id = BookAuthor.Id });
-
-            return Created(resourceUrl, BookAuthor);
+            return CreatedAtAction(nameof(GetAuthorById), new { id = author.Id }, author);
         }
         #endregion
 
         #region PUT
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBookAuthor(int id, [FromBody] BookAuthor BookAuthor)
+        public async Task<IActionResult> UpdateAuthor(int id, [FromBody] BookAuthorPutDto BookAuthorPutDto)
         {
-            if (id != BookAuthor.Id)
-            {
-                return BadRequest();
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.Entry(BookAuthor).State = EntityState.Modified;
+            var author = await _context.BookAuthors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
-            try
+            if (author == null) return NotFound();
+
+            foreach (var prop in typeof(BookAuthorPutDto).GetProperties())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookAuthorExists(id))
+                var value = prop.GetValue(BookAuthorPutDto);
+                if (value != null)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
+                    var authorProp = typeof(Book).GetProperty(prop.Name);
+                    if (authorProp != null && authorProp.CanWrite)
+                    {
+                        authorProp.SetValue(author, value);
+                    }
                 }
             }
 
-            return NoContent();
-        }
-
-        private bool BookAuthorExists(int id)
-        {
-            return _context.BookAuthors.Any(d => d.Id == id);
+            await _context.SaveChangesAsync();
+            return Ok(author);
         }
         #endregion
 

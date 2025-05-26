@@ -11,7 +11,6 @@ namespace BibliotekaAPI.Models
         public string Surname { get; set; }
 
         //kolekcja książek tego autora - relacja jeden do wielu, zalecany jednak ICollection dla EF
-        //public List<Book> Books { get; set; } = [];
-        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public ICollection<Book> Books { get; set; }
     }
 }
