@@ -11,15 +11,16 @@ namespace BibliotekaAPI.Models
 
         public string Title { get; set; }
 
-        public string Year { get; set; }
+        public int Year { get; set; }
 
         public string Description { get; set; } //krótki opis ksiazki
 
         public string Isbn { get; set; } //numer ISBN
 
-        public string PageCount { get; set; } //ilość stron
+        public int PageCount { get; set; } //ilość stron
 
         public bool IsDeleted { get; set; } = false;//do soft delete
+
         public bool IsVisible { get; set; } = true;//do widoku w katalogu
 
         #region Odwołania do innych

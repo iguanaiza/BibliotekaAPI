@@ -14,8 +14,11 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     }); //dodaje pominiêcie pêtli odniesieñ np. book->author->books
 
+//builder.Services.AddDbContext<ApplicationDbContext>(
+//options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDb")));
 
 // Swagger wraz z walidacja required
 builder.Services.AddEndpointsApiExplorer();

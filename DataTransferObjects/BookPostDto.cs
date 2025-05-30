@@ -8,8 +8,7 @@ namespace BibliotekaAPI.DataTransferObjects
         [Required]
         public string Title { get; set; }
 
-        [Required]
-        public string Year { get; set; }
+        public int Year { get; set; }
 
         [Required]
         public string Description { get; set; }
@@ -17,8 +16,7 @@ namespace BibliotekaAPI.DataTransferObjects
         [Required]
         public string Isbn { get; set; }
 
-        [Required]
-        public string PageCount { get; set; }
+        public int PageCount { get; set; }
         public bool IsVisible { get; set; }
 
         [Required]

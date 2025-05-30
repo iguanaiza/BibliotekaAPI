@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BibliotekaAPI.Data;
 using BibliotekaAPI.Models;
 using BibliotekaAPI.DataTransferObjects;
+using BibliotekaSzkolnaBlazor.DataTransferObjects;
 
 namespace BibliotekaAPI.Controllers
 {
@@ -99,32 +100,28 @@ namespace BibliotekaAPI.Controllers
         #endregion
 
         #region POST
+        //public async Task<IActionResult> CreateBook(BookPostDto BookPostDto)
         [HttpPost]
-        public async Task<IActionResult> CreateBook(BookPostDto BookPostDto)
+        public async Task<IActionResult> CreateBook(BookUpsertDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var book = new Book
             {
-                Title = BookPostDto.Title,
-                Year = BookPostDto.Year,
-                Description = BookPostDto.Description,
-                Isbn = BookPostDto.Isbn,
-                PageCount = BookPostDto.PageCount,
-                IsVisible = BookPostDto.IsVisible,
-                BookAuthorId = BookPostDto.BookAuthorId,
-                BookPublisherId = BookPostDto.BookPublisherId,
-                BookSeriesId = BookPostDto.BookSeriesId,
-                BookTypeId = BookPostDto.BookTypeId,
-                BookCategoryId = BookPostDto.BookCategoryId,
-                BookBookGenres = BookPostDto.BookGenreIds
-                    .Select(id => new BookBookGenre
-                    {
-                        BookGenreId = id
-                    })
-                    .ToList()
-                };
+                Title = dto.Title,
+                Year = dto.Year,
+                Description = dto.Description,
+                Isbn = dto.Isbn,
+                PageCount = dto.PageCount,
+                IsVisible = dto.IsVisible,
+                BookAuthorId = dto.BookAuthorId,
+                BookPublisherId = dto.BookPublisherId,
+                BookSeriesId = dto.BookSeriesId,
+                BookTypeId = dto.BookTypeId,
+                BookCategoryId = dto.BookCategoryId,
+                BookBookGenres = dto.BookGenreIds.Select(id => new BookBookGenre { BookGenreId = id }).ToList()
+            };
 
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
@@ -134,8 +131,9 @@ namespace BibliotekaAPI.Controllers
         #endregion
 
         #region PUT
+        // public async Task<IActionResult> UpdateBook(int id, [FromBody] BookPutDto BookPutDto)
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookPutDto BookPutDto)
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookUpsertDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -151,37 +149,23 @@ namespace BibliotekaAPI.Controllers
 
             if (book == null) return NotFound();
 
-            //nadpisanie tylko wybranego pola (można edytować np. sam tytuł)
-            foreach (var prop in typeof(BookPutDto).GetProperties())
-            {
-                var value = prop.GetValue(BookPutDto);
-                if (value != null)
-                {
-                    var bookProp = typeof(Book).GetProperty(prop.Name);
-                    if (bookProp != null && bookProp.CanWrite)
-                    {
-                        bookProp.SetValue(book, value);
-                    }
-                }
-            }
-
-            /*book.Title = BookPutDto.Title;
-            book.Year = BookPutDto.Year;
-            book.Description = BookPutDto.Description;
-            book.Isbn = BookPutDto.Isbn;
-            book.PageCount = BookPutDto.PageCount;
-            book.IsVisible = BookPutDto.IsVisible;
-            book.BookAuthorId = BookPutDto.BookAuthorId;
-            book.BookPublisherId = BookPutDto.BookPublisherId;
-            book.BookSeriesId = BookPutDto.BookSeriesId;
-            book.BookTypeId = BookPutDto.BookTypeId;
-            book.BookCategoryId = BookPutDto.BookCategoryId;
-            book.BookBookGenres = BookPutDto.BookGenreIds
+            book.Title = dto.Title;
+            book.Year = dto.Year;
+            book.Description = dto.Description;
+            book.Isbn = dto.Isbn;
+            book.PageCount = dto.PageCount;
+            book.IsVisible = dto.IsVisible;
+            book.BookAuthorId = dto.BookAuthorId;
+            book.BookPublisherId = dto.BookPublisherId;
+            book.BookSeriesId = dto.BookSeriesId;
+            book.BookTypeId = dto.BookTypeId;
+            book.BookCategoryId = dto.BookCategoryId;
+            book.BookBookGenres = dto.BookGenreIds
                 .Select(id => new BookBookGenre
                 {
                     BookGenreId = id
                 })
-                .ToList();*/
+                .ToList();
 
             await _context.SaveChangesAsync();
             return Ok(book); //jeszcze mozna dac ew. return NoContent() - ale to nie zwraca tych zaktualizowanych danych
@@ -208,3 +192,28 @@ namespace BibliotekaAPI.Controllers
         #endregion
     } 
 }
+/*
+ *   "bookAuthorId": 1,
+  "bookPublisherId": 1,
+  "bookSeriesId": 1,
+  "bookTypeId": 1,
+  "bookCategoryId": 3,
+  "bookGenreIds": [
+    1, 2, 3
+  ]
+
+ "title": "Opowieści z Narnii: Srebrne krzesło",
+  "year": 2008,
+  "description": "W tomie czwartym zatytułowanym "Srebrne krzesło" Eustachy i Julia obdarzeni przez Aslana misją odnalezienia zaginionego królewicza Narnii, wędrując w towarzystwie dzielnego Błotosmętka przez budzące zdumienie i grozę krainy, odkrywają, że przeciwstawienie się złu daje zadziwiającą siłę do walki z nim.",
+  "isbn": "978-83-7278-183-3",
+  "pageCount": 234,
+  "isVisible": true,
+  "bookAuthorId": 2,
+  "bookPublisherId": 1,
+  "bookSeriesId": 2,
+  "bookTypeId": 1,
+  "bookCategoryId": 3,
+  "bookGenreIds": [
+    1, 2, 3
+  ]
+ */
