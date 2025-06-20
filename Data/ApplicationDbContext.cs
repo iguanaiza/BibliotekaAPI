@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using BibliotekaAPI.Models;
+using BibliotekaAPI.Models.Singles;
+using BibliotekaAPI.Models.Relations;
 
 namespace BibliotekaAPI.Data
 {
@@ -15,12 +16,14 @@ namespace BibliotekaAPI.Data
         public DbSet<BookCategory> BookCategories { get; set; }
         public DbSet<BookCopy> BookCopies { get; set; }
         public DbSet<BookGenre> BookGenres { get; set; }
+        public DbSet<BookSpecialTag> BookSpecialTags { get; set; }
         public DbSet<BookPublisher> BookPublishers { get; set; }
         public DbSet<BookSeries> BookSeries { get; set; }
         public DbSet<BookType> BookTypes { get; set; }
         public DbSet<BookBookGenre> BooksBookGenres { get; set; }
+        public DbSet<BookBookSpecialTag> BooksBookSpecialTags { get; set; }
 
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //filtr - pokazuje tylko ksiazki nieusuniete (tzn nieoznaczone jako usuniete)
@@ -39,6 +42,20 @@ namespace BibliotekaAPI.Data
                 .HasOne(bb => bb.BookGenre)
                 .WithMany(bg => bg.BookBookGenres)
                 .HasForeignKey(bb => bb.BookGenreId);
+
+            //polaczenie ksiazka-tag (wiele-do-wielu)
+            modelBuilder.Entity<BookBookSpecialTag>()
+                .HasKey(bb => new { bb.BookId, bb.BookSpecialTagId });
+
+            modelBuilder.Entity<BookBookSpecialTag>()
+                .HasOne(bb => bb.Book)
+                .WithMany(b => b.BookBookSpecialTags)
+                .HasForeignKey(bb => bb.BookId);
+
+            modelBuilder.Entity<BookBookSpecialTag>()
+                .HasOne(bb => bb.BookSpecialTag)
+                .WithMany(bg => bg.BookBookSpecialTags)
+                .HasForeignKey(bb => bb.BookSpecialTagId);
         }
     }
 }

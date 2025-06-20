@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BibliotekaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250528064141_dodaniePolBookCopy")]
-    partial class dodaniePolBookCopy
+    [Migration("20250620154653_DateTimeFieldsModifiedCreated")]
+    partial class DateTimeFieldsModifiedCreated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,37 @@ namespace BibliotekaAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BibliotekaAPI.Models.Book", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Relations.BookBookGenre", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookGenreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "BookGenreId");
+
+                    b.HasIndex("BookGenreId");
+
+                    b.ToTable("BooksBookGenres");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Relations.BookBookSpecialTag", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookSpecialTagId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BookId", "BookSpecialTagId");
+
+                    b.HasIndex("BookSpecialTagId");
+
+                    b.ToTable("BooksBookSpecialTags");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,11 +78,17 @@ namespace BibliotekaAPI.Migrations
                     b.Property<int>("BookTypeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Class")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -65,17 +101,21 @@ namespace BibliotekaAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PageCount")
-                        .IsRequired()
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PageCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Subject")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Year")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -92,13 +132,19 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookAuthor", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookAuthor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -113,28 +159,19 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookAuthors");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookBookGenre", b =>
-                {
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("BookGenreId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookId", "BookGenreId");
-
-                    b.HasIndex("BookGenreId");
-
-                    b.ToTable("BooksBookGenres");
-                });
-
-            modelBuilder.Entity("BibliotekaAPI.Models.BookCategory", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -145,7 +182,7 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookCategories");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookCopy", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookCopy", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -159,9 +196,17 @@ namespace BibliotekaAPI.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<string>("InventoryNum")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InventoryNum")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Signature")
                         .IsRequired()
@@ -174,13 +219,19 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookCopies");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookGenre", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookGenre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -191,13 +242,19 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookGenres");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookPublisher", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookPublisher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -208,13 +265,19 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookPublishers");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookSeries", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookSeries", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -225,13 +288,42 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookSeries");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookType", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookSpecialTag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BookSpecialTags");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -242,33 +334,71 @@ namespace BibliotekaAPI.Migrations
                     b.ToTable("BookTypes");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.Book", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Relations.BookBookGenre", b =>
                 {
-                    b.HasOne("BibliotekaAPI.Models.BookAuthor", "BookAuthor")
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookGenre", "BookGenre")
+                        .WithMany("BookBookGenres")
+                        .HasForeignKey("BookGenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BibliotekaAPI.Models.Singles.Book", "Book")
+                        .WithMany("BookBookGenres")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("BookGenre");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Relations.BookBookSpecialTag", b =>
+                {
+                    b.HasOne("BibliotekaAPI.Models.Singles.Book", "Book")
+                        .WithMany("BookBookSpecialTags")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookSpecialTag", "BookSpecialTag")
+                        .WithMany("BookBookSpecialTags")
+                        .HasForeignKey("BookSpecialTagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("BookSpecialTag");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.Book", b =>
+                {
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookAuthor", "BookAuthor")
                         .WithMany("Books")
                         .HasForeignKey("BookAuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BibliotekaAPI.Models.BookCategory", "BookCategory")
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookCategory", "BookCategory")
                         .WithMany("Books")
                         .HasForeignKey("BookCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BibliotekaAPI.Models.BookPublisher", "BookPublisher")
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookPublisher", "BookPublisher")
                         .WithMany("Books")
                         .HasForeignKey("BookPublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BibliotekaAPI.Models.BookSeries", "BookSeries")
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookSeries", "BookSeries")
                         .WithMany("Books")
                         .HasForeignKey("BookSeriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BibliotekaAPI.Models.BookType", "BookType")
+                    b.HasOne("BibliotekaAPI.Models.Singles.BookType", "BookType")
                         .WithMany("Books")
                         .HasForeignKey("BookTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -285,28 +415,9 @@ namespace BibliotekaAPI.Migrations
                     b.Navigation("BookType");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookBookGenre", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookCopy", b =>
                 {
-                    b.HasOne("BibliotekaAPI.Models.BookGenre", "BookGenre")
-                        .WithMany("BookBookGenres")
-                        .HasForeignKey("BookGenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BibliotekaAPI.Models.Book", "Book")
-                        .WithMany("BookBookGenres")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("BookGenre");
-                });
-
-            modelBuilder.Entity("BibliotekaAPI.Models.BookCopy", b =>
-                {
-                    b.HasOne("BibliotekaAPI.Models.Book", "Book")
+                    b.HasOne("BibliotekaAPI.Models.Singles.Book", "Book")
                         .WithMany("BookCopies")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -315,39 +426,46 @@ namespace BibliotekaAPI.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.Book", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.Book", b =>
                 {
                     b.Navigation("BookBookGenres");
+
+                    b.Navigation("BookBookSpecialTags");
 
                     b.Navigation("BookCopies");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookAuthor", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookAuthor", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookCategory", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookCategory", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookGenre", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookGenre", b =>
                 {
                     b.Navigation("BookBookGenres");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookPublisher", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookPublisher", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookSeries", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookSeries", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("BibliotekaAPI.Models.BookType", b =>
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookSpecialTag", b =>
+                {
+                    b.Navigation("BookBookSpecialTags");
+                });
+
+            modelBuilder.Entity("BibliotekaAPI.Models.Singles.BookType", b =>
                 {
                     b.Navigation("Books");
                 });

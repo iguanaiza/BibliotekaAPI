@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BibliotekaAPI.Models
+namespace BibliotekaAPI.Models.Singles
 {
-    //kategoria czyli lektura, podrecznik, pozostałe - to nie gatunek ksiazki ani nie typ!!!
-    public class BookCategory
+    public class BookPublisher
     {
         public int Id { get; set; }
-
+        public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime? Modified { get; set; }
         public string Name { get; set; }
-
         public ICollection<Book> Books { get; set; }
     }
 }

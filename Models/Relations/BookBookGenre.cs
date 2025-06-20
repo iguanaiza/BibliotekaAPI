@@ -1,4 +1,6 @@
-﻿namespace BibliotekaAPI.Models
+﻿using BibliotekaAPI.Models.Singles;
+
+namespace BibliotekaAPI.Models.Relations
 {
     public class BookBookGenre
     {
