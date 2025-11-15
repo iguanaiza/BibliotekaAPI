@@ -4,9 +4,9 @@ API project for library management, created as one of the projects during inform
 The API is intended to manage book resources and allow for the addition of supplemental data, such as specific book copies.
 
 The project objectives were:
-* To create the database model.
-* To develop an API for data management.
-* To provide a visual presentation of the solution using Swagger.
+*To create the database model.
+*To develop an API for data management.
+*To provide a visual presentation of the solution using Swagger.
 
 ## Technologies
 The project was developed as an ASP.NET Core 9 API. It runs in a local environment using a local Microsoft SQL Server database. The project was developed in Visual Studio 2022.
