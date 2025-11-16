@@ -22,5 +22,6 @@ The project implements three controllers: BookController, CatalogController, and
 
 Each controller implements specific HTTP methods.
 
-## Full project documentation
-**Full project documentation** (in polish) is available in the file [w71345_Biblioteka_szkolna_API.pdf](https://github.com/iguanaiza/BibliotekaAPI/blob/master/w71345_Biblioteka_szkolna_API.pdf)
+## Project documentation
+**Partial project documentation** in polish is available in the file [Biblioteka_szkolna_API_docs_PL.pdf](https://github.com/iguanaiza/BibliotekaAPI/blob/master/Biblioteka_szkolna_API_docs_PL.pdf).
+Full version can be sent on request for job recruitment process.
